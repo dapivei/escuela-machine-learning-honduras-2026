@@ -13,10 +13,10 @@ Este repositorio reúne los materiales de las sesiones: **diapositivas interacti
 
 | # | Tema | Diapositivas | Notebook de práctica |
 |---|---|---|---|
-| 1 | Introducción a Python y pandas | Clase 1 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/01_python_pandas.ipynb) |
-| 2 | Introducción a la visualización de datos | Clase 2 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/02_visualizacion.ipynb) |
-| 3 | Algoritmos de clasificación | Módulo 4 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/03_clasificacion.ipynb) |
-| 4 | Agentes de IA | Módulo 5 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/04_agentes.ipynb) |
+| 1 | Introducción a Python y pandas | Módulo 1 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/01_python_pandas.ipynb) |
+| 2 | Introducción a la visualización de datos | Módulo 2 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/02_visualizacion.ipynb) |
+| 3 | Algoritmos de clasificación | Módulo 3 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/03_clasificacion.ipynb) |
+| 4 | Agentes de IA | Módulo 4 | [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dapivei/escuela-machine-learning-honduras-2026/blob/main/notebooks/04_agentes.ipynb) |
 
 ### Qué se ve en cada tema
 
