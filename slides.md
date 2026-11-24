@@ -1933,6 +1933,41 @@ color: sky-light
 -->
 
 ---
+layout: top-title
+color: sky-light
+---
+
+:: title ::
+
+# Cómo se evalúa k: dejar uno fuera
+
+:: content ::
+
+<KnnLoo />
+
+<!--
+Recorre los 14 pasos. En cada uno, el alumno excluido nunca entra al escalado ni a la votación. Pide que predigan el resultado antes de mostrar el ✓ o ✗.
+-->
+
+---
+layout: top-title
+color: sky-light
+---
+
+:: title ::
+
+# Escoger el mínimo
+
+:: content ::
+
+<KnnMinimo />
+
+<!--
+Repite el procedimiento para cada k. El mínimo es 21 % en k = 1 y k = 7. Desempate: el k más grande, porque es el modelo más simple.
+-->
+
+
+---
 layout: section
 color: emerald
 ---
