@@ -1,5 +1,6 @@
 <script setup>
-import { ALUMNOS, plano, AZUL, NARANJA } from '../utils/alumnos.js'
+import { computed } from 'vue'
+import { ALUMNOS, plano, planoEsc, AZUL, NARANJA } from '../utils/alumnos.js'
 
 const props = defineProps({
   W: { type: Number, default: 400 }, H: { type: Number, default: 300 },
@@ -8,12 +9,13 @@ const props = defineProps({
   anillo: { type: Function, default: () => false },
   nombres: { type: Boolean, default: true },
   atenuar: { type: Function, default: () => false },
+  escalado: { type: Boolean, default: false },
 })
 const emit = defineEmits(['clic'])
-const g = plano(props.W, props.H)
+const g = computed(() => props.escalado ? planoEsc(props.W, props.H) : plano(props.W, props.H))
 function clic(e) {
   const r = e.currentTarget.getBoundingClientRect(), s = props.W / r.width
-  const h = g.ih((e.clientX - r.left) * s), a = g.ia((e.clientY - r.top) * s)
+  const h = g.value.ih((e.clientX - r.left) * s), a = g.value.ia((e.clientY - r.top) * s)
   if (h >= 0 && h <= 10 && a >= 50 && a <= 100) emit('clic', { h: Math.round(h * 2) / 2, a: Math.round(a) })
 }
 </script>
@@ -29,7 +31,7 @@ function clic(e) {
         <line :x1="g.px(0)" :x2="g.px(10)" :y1="g.py(a)" :y2="g.py(a)" stroke="#f1f5f9" />
         <text :x="g.P - 6" :y="g.py(a) + 3" text-anchor="end">{{ a }}</text>
       </template>
-      <text :x="(g.px(0) + g.px(10)) / 2" :y="H - 2" text-anchor="middle" fill="#64748b">horas de estudio por semana</text>
+      <text :x="(g.px(0) + g.px(10)) / 2" :y="H - 2" text-anchor="middle" fill="#64748b">horas de estudio por semana{{ escalado ? ' (escaladas)' : '' }}</text>
       <text x="9" :y="H / 2 - 10" text-anchor="middle" fill="#64748b" :transform="`rotate(-90 9 ${H / 2 - 10})`">asistencia (%)</text>
     </g>
     <slot name="fondo" :g="g" />

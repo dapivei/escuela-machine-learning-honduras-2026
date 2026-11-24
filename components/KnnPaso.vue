@@ -17,7 +17,7 @@ const esVecino = p => vecinos.value.some(v => v.n === p.n)
 <template>
   <div class="demo" style="gap:16px">
     <div style="display:flex;flex-direction:column;gap:4px">
-      <PlanoAlumnos :W="390" :H="300" :ana="ana" :anillo="esVecino" @clic="ana = { n: 'Ana', ...$event }">
+      <PlanoAlumnos :W="390" :H="300" :ana="ana" :anillo="esVecino" :escalado="escalar" @clic="ana = { n: 'Ana', ...$event }">
         <template #fondo="{ g }">
           <line v-for="v in vecinos" :key="v.n" :x1="g.px(ana.h)" :y1="g.py(ana.a)" :x2="g.px(v.h)" :y2="g.py(v.a)" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="4 3" />
         </template>
