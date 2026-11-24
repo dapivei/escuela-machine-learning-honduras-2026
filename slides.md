@@ -1383,15 +1383,21 @@ color: white
 
 | En el ejemplo | Nombre técnico | Notación |
 |---|---|---|
-| Cada alumno | observación | $x_i$ |
-| Horas y asistencia | variables (*features*) | $x_i \in \mathbb{R}^d$, aquí $d = 2$ |
-| ¿Aprobó? | etiqueta o clase | $y_i \in \{\text{No}, \text{Sí}\}$ |
+| Cada alumno | observación | $x_i = (x_{i1}, x_{i2}) \in \mathbb{R}^d$, aquí $d = 2$ |
+| Horas y asistencia | variables (*features*) | $x_{i1}$ = horas, $x_{i2}$ = asistencia; en general $x_{ij}$, con $j = 1, \dots, d$ |
+| ¿Aprobó? | etiqueta o clase | $y_i \in \{\text{No}, \text{Sí}\}$ (en las fórmulas, $0$ y $1$) |
 | Los alumnos de semestres pasados | datos de entrenamiento | $\{(x_i, y_i)\}_{i=1}^{n}$ |
 | Tu regla mental | clasificador | $f : \mathbb{R}^d \to \{1, \dots, K\}$ |
 
 <div v-click class="mt-6 text-lg">
 
 **Clasificar** = aprender $f$ a partir de ejemplos $(x_i, y_i)$ para predecir la clase de una observación **nueva**.
+
+</div>
+
+<div v-click class="mt-4 text-base">
+
+**Convención de subíndices:** $x_i$ es el alumno completo; $x_{ij}$ es la variable $j$ del alumno $i$; $x_j$ sin $i$ es una variable genérica de una sola observación.
 
 </div>
 
@@ -1701,13 +1707,15 @@ color: white
 
 <v-clicks>
 
-**1 · Calcular un puntaje** $z$ con pesos para cada variable:
+**1 · Calcular un puntaje** $z_i$ del alumno $i$, con un peso por cada variable:
 
-$$z = w_1 \cdot \text{horas} + w_2 \cdot \text{asistencia} + b$$
+$$z_i = w_1 x_{i1} + w_2 x_{i2} + b = w^\top x_i + b$$
+
+donde $x_{i1}$ son las horas y $x_{i2}$ la asistencia del alumno $i$.
 
 **2 · Convertirlo en probabilidad** con la función **sigmoide**, que aplasta cualquier número al rango 0–1:
 
-$$p = \sigma(z) = \frac{1}{1 + e^{-z}}$$
+$$p_i = \sigma(z_i) = \frac{1}{1 + e^{-z_i}}$$
 
 **3 · Decidir:** si $p \ge 0.5$ → «aprueba».
 
@@ -1750,15 +1758,15 @@ color: white
 
 :: left ::
 
-**La frontera es una recta.** $p = 0.5$ cuando $z = 0$:
+**La frontera es una recta.** $p = 0.5$ cuando $z = 0$. Para un punto genérico $x = (x_1, x_2)$:
 
-$$w_1 \cdot \text{horas} + w_2 \cdot \text{asistencia} + b = 0$$
+$$w_1 x_1 + w_2 x_2 + b = 0$$
 
 <v-click>
 
 **Los pesos se interpretan.** La sigmoide es la inversa del *log-odds*:
 
-$$\log\frac{p}{1-p} = z$$
+$$\log\frac{p_i}{1-p_i} = z_i$$
 
 Con $w_1 = 1.2$: cada hora extra **multiplica las probabilidades a favor** (*odds*) por $e^{1.2} \approx 3.3$.
 
@@ -1771,6 +1779,8 @@ Con $w_1 = 1.2$: cada hora extra **multiplica las probabilidades a favor** (*odd
 **Aprender = encontrar los pesos con menos error.** Se minimiza la **pérdida logarítmica** (entropía cruzada):
 
 $$\mathcal{L} = -\frac{1}{n}\sum_{i}\Big[y_i \log p_i + (1-y_i)\log(1-p_i)\Big]$$
+
+con $y_i = 1$ si el alumno aprobó y $y_i = 0$ si no aprobó.
 
 </v-click>
 
@@ -2018,7 +2028,7 @@ color: emerald-light
 
 :: left ::
 
-Cada nodo prueba todos los cortes $x_j \le t$ y elige el que **más reduce la impureza**.
+Cada nodo prueba todos los cortes de la forma $x_{ij} \le t$ (la variable $j$ del alumno $i$ no supera el umbral $t$) y elige el que **más reduce la impureza**.
 
 **Gini**
 $$G = 1 - \sum_k p_k^2$$
@@ -2068,7 +2078,7 @@ color: amber
 
 # Sesgo y varianza
 
-Por qué un modelo falla: por simple o por nervioso
+Por qué un modelo falla: sobreajuste y subajuste
 
 ---
 layout: two-cols-title
@@ -2429,7 +2439,7 @@ color: violet-light
 **Margen duro**
 $$\min_{w,b}\ \tfrac12\lVert w\rVert^2 \quad\text{s.a.}\quad y_i(w^\top x_i + b) \ge 1$$
 
-La distancia entre las líneas $w^\top x + b = \pm 1$ es $2/\lVert w\rVert$: minimizar $\lVert w\rVert$ = maximizar el margen.
+Aquí las etiquetas son $y_i \in \{-1, +1\}$, no $0$ y $1$. La distancia entre las líneas $w^\top x + b = \pm 1$ es $2/\lVert w\rVert$: minimizar $\lVert w\rVert$ = maximizar el margen.
 
 <div v-click>
 
@@ -2815,7 +2825,7 @@ $$P(\text{siguiente token} \mid \text{texto anterior})$$
 
 Con la **regla de la cadena**, la probabilidad de un texto completo es:
 
-$$P(w_1,\dots,w_n) = \prod_{t=1}^{n} P(w_t \mid w_1,\dots,w_{t-1})$$
+$$P(u_1,\dots,u_n) = \prod_{t=1}^{n} P(u_t \mid u_1,\dots,u_{t-1})$$
 
 </v-click>
 
@@ -3078,7 +3088,7 @@ color: white
 
 Se ajustan los parámetros $\theta$ para que el modelo le dé **alta probabilidad al token correcto**. Se minimiza la **entropía cruzada**:
 
-$$\mathcal{L}(\theta) = -\frac{1}{N}\sum_{t=1}^{N} \log p_\theta(w_t \mid w_{<t})$$
+$$\mathcal{L}(\theta) = -\frac{1}{N}\sum_{t=1}^{N} \log p_\theta(u_t \mid u_{<t})$$
 
 <v-click>
 
