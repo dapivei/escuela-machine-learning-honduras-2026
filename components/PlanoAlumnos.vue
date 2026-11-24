@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { ALUMNOS, plano, planoEsc, AZUL, NARANJA } from '../utils/alumnos.js'
+import { ALUMNOS, plano, planoEsc, zh, za, MU_H, SD_H, MU_A, SD_A, AZUL, NARANJA } from '../utils/alumnos.js'
 
 const props = defineProps({
   W: { type: Number, default: 400 }, H: { type: Number, default: 300 },
@@ -13,6 +13,18 @@ const props = defineProps({
 })
 const emit = defineEmits(['clic'])
 const g = computed(() => props.escalado ? planoEsc(props.W, props.H) : plano(props.W, props.H))
+// Marcas de los ejes: en unidades originales, o en z (desviaciones estándar) si está escalado.
+const ticks = computed(() => {
+  if (!props.escalado) return {
+    h: [0, 2, 4, 6, 8, 10].map(v => ({ v, t: String(v) })),
+    a: [50, 60, 70, 80, 90, 100].map(v => ({ v, t: String(v) })),
+  }
+  const enteros = (lo, hi) => { const out = []; for (let z = Math.ceil(lo); z <= Math.floor(hi); z++) out.push(z); return out }
+  return {
+    h: enteros(zh(0), zh(10)).map(z => ({ v: MU_H + z * SD_H, t: String(z) })),
+    a: enteros(za(50), za(100)).map(z => ({ v: MU_A + z * SD_A, t: String(z) })),
+  }
+})
 function clic(e) {
   const r = e.currentTarget.getBoundingClientRect(), s = props.W / r.width
   const h = g.value.ih((e.clientX - r.left) * s), a = g.value.ia((e.clientY - r.top) * s)
@@ -23,16 +35,16 @@ function clic(e) {
 <template>
   <svg :width="W" :height="H" style="background:#fff;border:1px solid #cbd5e1;border-radius:10px;flex-shrink:0" @click="clic">
     <g style="font-size:10px" fill="#94a3b8">
-      <template v-for="h in [0, 2, 4, 6, 8, 10]" :key="'h' + h">
-        <line :x1="g.px(h)" :x2="g.px(h)" :y1="g.py(50)" :y2="g.py(100)" stroke="#f1f5f9" />
-        <text :x="g.px(h)" :y="H - 14" text-anchor="middle">{{ h }}</text>
+      <template v-for="h in ticks.h" :key="'h' + h.t">
+        <line :x1="g.px(h.v)" :x2="g.px(h.v)" :y1="g.py(50)" :y2="g.py(100)" stroke="#f1f5f9" />
+        <text :x="g.px(h.v)" :y="H - 14" text-anchor="middle">{{ h.t }}</text>
       </template>
-      <template v-for="a in [50, 60, 70, 80, 90, 100]" :key="'a' + a">
-        <line :x1="g.px(0)" :x2="g.px(10)" :y1="g.py(a)" :y2="g.py(a)" stroke="#f1f5f9" />
-        <text :x="g.P - 6" :y="g.py(a) + 3" text-anchor="end">{{ a }}</text>
+      <template v-for="a in ticks.a" :key="'a' + a.t">
+        <line :x1="g.px(0)" :x2="g.px(10)" :y1="g.py(a.v)" :y2="g.py(a.v)" stroke="#f1f5f9" />
+        <text :x="g.P - 6" :y="g.py(a.v) + 3" text-anchor="end">{{ a.t }}</text>
       </template>
-      <text :x="(g.px(0) + g.px(10)) / 2" :y="H - 2" text-anchor="middle" fill="#64748b">horas de estudio por semana{{ escalado ? ' (escaladas)' : '' }}</text>
-      <text x="9" :y="H / 2 - 10" text-anchor="middle" fill="#64748b" :transform="`rotate(-90 9 ${H / 2 - 10})`">asistencia (%)</text>
+      <text :x="(g.px(0) + g.px(10)) / 2" :y="H - 2" text-anchor="middle" fill="#64748b">{{ escalado ? 'horas (z)' : 'horas de estudio por semana' }}</text>
+      <text x="9" :y="H / 2 - 10" text-anchor="middle" fill="#64748b" :transform="`rotate(-90 9 ${H / 2 - 10})`">{{ escalado ? 'asistencia (z)' : 'asistencia (%)' }}</text>
     </g>
     <slot name="fondo" :g="g" />
     <g v-for="p in puntos" :key="p.n" :opacity="atenuar(p) ? 0.3 : 1">
