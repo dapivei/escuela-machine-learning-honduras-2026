@@ -24,4 +24,14 @@ export function plano(W = 400, H = 300, P = 36) {
   const ia = y => 50 + ((H - 28 - y) / (H - 38)) * 50
   return { W, H, P, px, py, ih, ia }
 }
+// Plano escalado: x = z(horas), y = z(asistencia), la misma escala que usa la distancia.
+// Las etiquetas de los ejes siguen en unidades originales; sólo cambian las posiciones.
+export function planoEsc(W = 400, H = 300, P = 36) {
+  const x0 = zh(0), x1 = zh(10), y0 = za(50), y1 = za(100)
+  const px = h => P + ((zh(h) - x0) / (x1 - x0)) * (W - P - 10)
+  const py = a => H - 28 - ((za(a) - y0) / (y1 - y0)) * (H - 38)
+  const ih = x => MU_H + (x0 + ((x - P) / (W - P - 10)) * (x1 - x0)) * SD_H
+  const ia = y => MU_A + (y0 + ((H - 28 - y) / (H - 38)) * (y1 - y0)) * SD_A
+  return { W, H, P, px, py, ih, ia }
+}
 export const AZUL = '#2563eb', NARANJA = '#ea580c'
