@@ -10,17 +10,17 @@ const ejes = [0, 0.2, 0.4, 0.6, 0.8, 1]
 
 <template>
   <div class="knn-minimo" style="font-size:13px;max-width:520px">
-    <svg :viewBox="`0 0 ${W} ${H}`" :width="W" :height="H" role="img" aria-label="Error de validación por k">
+    <svg :viewBox="`0 0 ${W} ${H}`" :style="`width:${W}px;height:${H}px;max-width:none`" role="img" aria-label="Error de validación por k">
       <g v-for="e in ejes" :key="e">
         <line :x1="P.l" :x2="W - P.r" :y1="yPct(e)" :y2="yPct(e)" stroke="#e1e0d9" stroke-width="0.5" />
-        <text :x="P.l - 6" :y="yPct(e) + 4" text-anchor="end" font-size="10" fill="#898781">{{ Math.round(e * 100) }}%</text>
+        <text :x="P.l - 6" :y="yPct(e) + 4" text-anchor="end" style="font-size:10px" fill="#898781">{{ Math.round(e * 100) }}%</text>
       </g>
       <g v-for="(k, j) in KS" :key="k">
         <rect :x="P.l + j * bw + bw * 0.2" :y="H - P.b - errs[j] * (H - P.t - P.b)"
           :width="bw * 0.6" :height="errs[j] * (H - P.t - P.b)" rx="3"
           :fill="k === best ? '#eb6834' : '#2a78d6'" />
-        <text :x="P.l + j * bw + bw * 0.5" :y="H - P.b - errs[j] * (H - P.t - P.b) - 5" text-anchor="middle" font-size="10" fill="#0b0b0b">{{ Math.round(errs[j] * 100) }}%</text>
-        <text :x="P.l + j * bw + bw * 0.5" :y="H - P.b + 15" text-anchor="middle" font-size="11" fill="#52514e">k={{ k }}</text>
+        <text :x="P.l + j * bw + bw * 0.5" :y="H - P.b - errs[j] * (H - P.t - P.b) - 5" text-anchor="middle" style="font-size:10px" fill="#0b0b0b">{{ Math.round(errs[j] * 100) }}%</text>
+        <text :x="P.l + j * bw + bw * 0.5" :y="H - P.b + 15" text-anchor="middle" style="font-size:11px" fill="#52514e">k={{ k }}</text>
       </g>
     </svg>
     <div style="margin-top:6px;line-height:1.5">
