@@ -1,9 +1,21 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { ALUMNOS } from '../utils/alumnos.js'
 import { looResult } from '../utils/loo.js'
 
 const paso = ref(0), k = ref(3)
+const reproduciendo = ref(false)
+let timer = null
+function alternar() {
+  if (timer) { clearInterval(timer); timer = null; reproduciendo.value = false; return }
+  if (paso.value >= 13) paso.value = 0
+  reproduciendo.value = true
+  timer = setInterval(() => {
+    if (paso.value >= 13) { clearInterval(timer); timer = null; reproduciendo.value = false; return }
+    paso.value++
+  }, 1500)
+}
+onUnmounted(() => { if (timer) clearInterval(timer) })
 const r = computed(() => looResult(paso.value, k.value))
 const tira = computed(() => ALUMNOS.map((_, j) => (j > paso.value ? null : looResult(j, k.value).ok)))
 
@@ -16,7 +28,7 @@ const color = y => (y ? '#eb6834' : '#2a78d6')
 </script>
 
 <template>
-  <div class="knn-loo" style="font-size:14px">
+  <div class="knn-loo" style="font-size:13px">
     <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:10px">
       <label>Paso <b>{{ paso + 1 }}</b> de 14
         <input v-model.number="paso" type="range" min="0" max="13" step="1" style="width:170px">
@@ -24,6 +36,7 @@ const color = y => (y ? '#eb6834' : '#2a78d6')
       <label>k <b>{{ k }}</b>
         <input v-model.number="k" type="range" min="1" max="13" step="2" style="width:110px">
       </label>
+      <button type="button" @click="alternar">{{ reproduciendo ? 'Pausar' : 'Reproducir' }}</button>
     </div>
 
     <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
@@ -52,11 +65,11 @@ const color = y => (y ? '#eb6834' : '#2a78d6')
         <text :x="X(r.zq[0]) + 10" :y="Y(r.zq[1]) + 4" font-size="10" fill="#0b0b0b">{{ r.q.n }}</text>
       </svg>
 
-      <div style="flex:1;min-width:240px;line-height:1.7">
-        <div>Paso 1: se excluye a <b>{{ r.q.n }}</b>; etiqueta real <b>{{ r.q.y ? 'aprueba' : 'no aprueba' }}</b>. Quedan <b>{{ r.tr.length }}</b> alumnos.</div>
-        <div>Paso 2: se escala con esos {{ r.tr.length }}: horas (media {{ r.mh.toFixed(1) }}, sd {{ r.sh.toFixed(1) }}), asistencia (media {{ r.ma.toFixed(1) }}, sd {{ r.sa.toFixed(1) }}). En el plano, cada unidad es una desviación estándar.</div>
-        <div>Paso 3: los {{ k }} vecinos más cercanos son {{ r.vec.map(v => `${v.p.n} (${v.p.y ? 'aprueba' : 'no'})`).join(', ') }}. Votan: <b>{{ r.pred ? 'aprueba' : 'no aprueba' }}</b>.</div>
-        <div>Paso 4: <b>{{ r.ok ? 'acierta (✓)' : 'falla (✗)' }}</b>. Se registra y se repite con el siguiente alumno.</div>
+      <div style="flex:1;min-width:220px;line-height:1.5">
+        <div><b>1.</b> Excluimos a {{ r.q.n }} ({{ r.q.y ? 'aprueba' : 'no aprueba' }}).</div>
+        <div><b>2.</b> Escalamos con los otros {{ r.tr.length }}.</div>
+        <div><b>3.</b> Vecinos ({{ k }}): {{ r.vec.map(v => v.p.n).join(', ') }}. Votan: <b>{{ r.pred ? 'aprueba' : 'no aprueba' }}</b>.</div>
+        <div><b>4.</b> <b>{{ r.ok ? 'Acierta ✓' : 'Falla ✗' }}</b>. Registramos y seguimos.</div>
       </div>
     </div>
 
