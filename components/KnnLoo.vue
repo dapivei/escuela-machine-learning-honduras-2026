@@ -40,15 +40,15 @@ const color = y => (y ? '#eb6834' : '#2a78d6')
     </div>
 
     <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
-      <svg :width="S" :height="S" :viewBox="`0 0 ${S} ${S}`" role="img" aria-label="Plano escalado con el alumno excluido y sus vecinos">
+      <svg :width="S" :height="S" :viewBox="`0 0 ${S} ${S}`" :style="`width:${S}px;height:${S}px;max-width:none;flex:0 0 auto`" role="img" aria-label="Plano escalado con el alumno excluido y sus vecinos">
         <g v-for="v in ejes" :key="'e' + v">
           <line :x1="X(v)" :x2="X(v)" :y1="P" :y2="S - P" stroke="#e1e0d9" stroke-width="0.5" />
           <line :x1="P" :x2="S - P" :y1="Y(v)" :y2="Y(v)" stroke="#e1e0d9" stroke-width="0.5" />
-          <text v-if="v !== -3" :x="X(v)" :y="S - P + 14" text-anchor="middle" font-size="10" fill="#898781">{{ v }}</text>
-          <text v-if="v !== -3" :x="P - 6" :y="Y(v) + 3" text-anchor="end" font-size="10" fill="#898781">{{ v }}</text>
+          <text v-if="v !== -3" :x="X(v)" :y="S - P + 14" text-anchor="middle" style="font-size:10px" fill="#898781">{{ v }}</text>
+          <text v-if="v !== -3" :x="P - 6" :y="Y(v) + 3" text-anchor="end" style="font-size:10px" fill="#898781">{{ v }}</text>
         </g>
-        <text :x="S / 2" :y="S - 6" text-anchor="middle" font-size="11" fill="#52514e">horas (z)</text>
-        <text transform="translate(12 170) rotate(-90)" text-anchor="middle" font-size="11" fill="#52514e">asistencia (z)</text>
+        <text :x="S / 2" :y="S - 6" text-anchor="middle" style="font-size:11px" fill="#52514e">horas (z)</text>
+        <text transform="translate(12 170) rotate(-90)" text-anchor="middle" style="font-size:11px" fill="#52514e">asistencia (z)</text>
 
         <line v-for="v in r.vec" :key="'l' + v.p.n"
           :x1="X(r.zq[0])" :y1="Y(r.zq[1])" :x2="X(v.z[0])" :y2="Y(v.z[1])"
@@ -57,12 +57,12 @@ const color = y => (y ? '#eb6834' : '#2a78d6')
         <g v-for="v in r.tr" :key="v.p.n">
           <circle v-if="r.vec.some(w => w.p.n === v.p.n)" :cx="X(v.z[0])" :cy="Y(v.z[1])" r="10" fill="none" stroke="#0b0b0b" stroke-width="1.5" />
           <circle :cx="X(v.z[0])" :cy="Y(v.z[1])" r="5" :fill="color(v.p.y)" />
-          <text :x="X(v.z[0]) + 7" :y="Y(v.z[1]) - 6" font-size="9.5" fill="#52514e">{{ v.p.n }}</text>
+          <text :x="X(v.z[0]) + 7" :y="Y(v.z[1]) - 6" style="font-size:9.5px" fill="#52514e">{{ v.p.n }}</text>
         </g>
 
         <circle :cx="X(r.zq[0])" :cy="Y(r.zq[1])" r="8" fill="#ffffff" stroke="#0b0b0b" stroke-width="2" />
-        <text :x="X(r.zq[0])" :y="Y(r.zq[1]) + 4" text-anchor="middle" font-size="11" font-weight="500" fill="#0b0b0b">?</text>
-        <text :x="X(r.zq[0]) + 10" :y="Y(r.zq[1]) + 4" font-size="10" fill="#0b0b0b">{{ r.q.n }}</text>
+        <text :x="X(r.zq[0])" :y="Y(r.zq[1]) + 4" text-anchor="middle" style="font-size:11px" font-weight="500" fill="#0b0b0b">?</text>
+        <text :x="X(r.zq[0]) + 10" :y="Y(r.zq[1]) + 4" style="font-size:10px" fill="#0b0b0b">{{ r.q.n }}</text>
       </svg>
 
       <div style="flex:1;min-width:220px;line-height:1.5">
