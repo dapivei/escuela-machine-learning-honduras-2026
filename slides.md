@@ -2765,11 +2765,6 @@ Reto del notebook: predecir si un alumno aprueba con horas, asistencia y semestr
 -->
 
 ---
-layout: cover
-color: navy
----
-
----
 theme: neversink
 title: 'LLMs y agentes: aplicación a interpretación molecular'
 layout: cover
@@ -3651,125 +3646,40 @@ Usar el ejemplo del cisplatino o de un tumor con mutación en CTNNB1 para aterri
 ---
 layout: top-title
 color: white
+
 ---
 
 :: title ::
 
-# Por qué la similitud de texto no basta
+# ¿Por qué el problema es difícil?
 
 :: content ::
 
-<div class="mt-2">
+<div class="flex flex-col gap-2 mt-2 text-sm">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-| Métrica | Mide | Resultado en el caso |
-|---|---|---|
-| ROUGE | coincidencia de palabras | 0.07 a 0.14 |
-| BERTScore | parecido semántico | 0.92 a 0.98 |
-| ICARE-S2M | mecanismos recuperados | cobertura de 21 % a 39 % |
+**Evidencia heterogénea:** los datos vienen de varias modalidades (RNA-seq, proteómica, Ribo-seq) y de la literatura, y hay que integrarlos.
 
 </div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-<div v-click class="mt-4 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500">
-
-**Cisplatino:** BioBERT da **0.92**, pero ICARE-S2M da **0.28**. Las dos explicaciones coinciden en lo general y difieren en los mecanismos.
-
-</div>
-
-<!--
-Idea central: una similitud alta no implica que el mecanismo sea correcto.
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# El benchmark y la métrica propuesta
-
-:: content ::
-
-<div class="flex flex-col gap-3 mt-2">
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**S2M-bench:** 28 tareas tomadas de estudios publicados entre 2023 y 2025, curadas por expertos. Cada tarea trae contexto, firma, instrucción y una referencia validada.
+**Razonamiento causal de varios pasos:** en las tareas 3.2 y 3.3 la cobertura quedó cerca de cero en todas las configuraciones.
 
 </div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**ICARE-S2M:** convierte cada informe en puntos clave y genera preguntas de opción múltiple a partir de ellos.
+**Conocimiento implícito:** a veces el experto usa contexto que no está escrito en el estudio.
 
 </div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**Cobertura:** qué fracción de los mecanismos del experto recupera el agente.
-**Soporte:** qué fracción de lo que el agente afirma está respaldado por el experto.
+**Dos formas de fallar:** omitir mecanismos reales o introducir alternativas plausibles pero no respaldadas. La omisión fue el fallo dominante.
 
 </div>
 </div>
 
 <!--
-Explicar la diferencia: cobertura mide omisión; soporte mide afirmaciones sin respaldo.
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Resultados: plausibles, pero incompletos
-
-:: content ::
-
-<div class="mt-2">
-
-| Sistema | Cobertura |
-|---|---|
-| Baseline (solo prompt) | 21 % a 22 % |
-| Biomni | 25 % a 33 % |
-| Discovera | 30 % a 39 % |
-
-</div>
-
-<div v-click class="mt-4 p-3 rounded-lg bg-slate-50">
-
-Ningún sistema recupera la mitad de los mecanismos del experto. Los fallos más comunes son **omitir** mecanismos clave e introducir **afirmaciones sin respaldo**.
-
-</div>
-
-<!--
-Las cifras son rangos entre los dos modelos base usados (O4-Mini y Claude 3.5 Haiku).
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# ¿Qué cambia más el resultado?
-
-:: content ::
-
-<div class="flex flex-col gap-3 mt-2">
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**La arquitectura del flujo** (cómo se organiza el agente y qué herramientas usa) produce un efecto unas **dos veces mayor** que cambiar el modelo base.
-
-</div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**Algunas tareas** tienen cobertura cercana a cero en todas las configuraciones, lo que sugiere límites de los LLMs actuales, no del diseño.
-
-</div>
-</div>
-
-<!--
-Preguntar: ¿qué pasaría en su propio dominio si cambiamos el flujo en vez del modelo?
+Conectar con la idea de que el problema es de razonamiento, no solo de lenguaje.
 -->
 
 ---
@@ -3812,200 +3722,6 @@ color: white
 
 <!--
 Recorrer el diagrama de izquierda a derecha. Preguntar al grupo qué parte les parece más difícil de automatizar.
--->
-
----
-layout: top-title
-color: white
-
----
-
-:: title ::
-
-# Tres sistemas, tres diseños
-
-:: content ::
-
-<div class="flex flex-col gap-3 mt-2 text-sm">
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**Baseline (solo prompt):** el LLM recibe la tarea sin herramientas ni flujo de trabajo. Cobertura de 21 % a 22 %.
-
-</div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-sky-400 bg-white">
-
-**Biomni:** agente general biomédico. Agrega vías e interacciones regulatorias, así sube la cobertura a 25 % a 33 %, pero a menudo baja el soporte.
-
-</div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-emerald-500 bg-white">
-
-**Discovera:** agente especializado en la tarea. Es el de mejor alineación: cobertura de 30 % a 39 % con soporte comparable.
-
-</div>
-</div>
-
-<!--
-Mensaje clave: cambiar el diseño del agente mueve el resultado más que cambiar el modelo base.
--->
-
----
-layout: top-title
-color: white
-
----
-layout: top-title
-color: white
-
----
-
-:: title ::
-
-# Discovera: un agente con flujo fijo
-
-:: content ::
-
-<div class="grid grid-cols-3 gap-3 mt-2 text-sm">
-<div v-click class="p-3 rounded-lg border-2 border-sky-400 bg-white">
-
-**1. Módulo de razonamiento (LLM)**
-
-Orquesta. Decide en qué orden llamar herramientas, pero no calcula nada.
-
-</div>
-<div v-click class="p-3 rounded-lg border-2 border-emerald-500 bg-white">
-
-**2. Servidor de herramientas (MCP)**
-
-Ejecuta DESeq2, GSEA, ORA, INDRA, PubMed y GeneCards con entradas y salidas tipadas.
-
-</div>
-<div v-click class="p-3 rounded-lg border-2 border-amber-500 bg-white">
-
-**3. Almacén de artefactos**
-
-Guarda cada entrada, cada llamada y cada resultado. Así el análisis se puede auditar y repetir.
-
-</div>
-</div>
-
-<!--
-Notas para el instructor: el LLM es solo la capa de control. Todo el cálculo pesado sale del modelo.
--->
-
----
-layout: top-title
-color: white
-
----
-
-:: title ::
-
-# Discovera: de la pregunta al informe
-
-:: content ::
-
-<div class="flex flex-col gap-3 mt-2 text-sm">
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**Tarea 1, con conteos crudos:** pipeline completo. Lectura, DESeq2, GSEA, consulta a INDRA y ORA.
-
-</div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**Tarea 2, con vías ya calculadas:** filtra, luego GSEA y ORA por separado, y consulta RummaGENE.
-
-</div>
-<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**Tarea 3, con genes ya diferenciales:** salta el análisis estadístico. Consulta MyGene.info, RummaGENE y PubMed para priorizar blancos.
-
-</div>
-</div>
-
-<!--
-Mensaje clave: el agente no sigue un guion fijo para todas las tareas; elige qué etapas necesita según la entrada.
--->
-
----
-layout: top-title
-color: white
-
----
-
-:: title ::
-
-# Discovera: evidencia y trazabilidad
-
-:: content ::
-
-<div class="grid grid-cols-2 gap-4 mt-2 text-sm">
-<div>
-
-**Reglas de uso de la evidencia**
-
-<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
-Toda cifra, mecanismo o cita sale de una herramienta.
-</div>
-<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
-Antes de responder, el agente revisa sus propias cifras.
-</div>
-
-</div>
-<div>
-
-**Límites que reportan los autores**
-
-<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
-La calidad del mecanismo depende de los resultados de enriquecimiento previos.
-</div>
-<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
-No elimina alucinaciones ni valida causalidad. Sus hipótesis requieren experimentos.
-</div>
-
-</div>
-</div>
-
-<!--
-Mensaje clave: la trazabilidad no garantiza que la conclusión sea correcta, solo que se puede revisar.
--->
-
----
-layout: top-title
-color: white
-
----
-
-:: title ::
-
-# ICARE-S2M: cómo se evalúa un informe
-
-:: content ::
-
-<div class="flex flex-col gap-2 mt-2 text-sm">
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**1. Puntos clave:** cada informe (el del experto y el del agente) se reduce a sus afirmaciones causales y funcionales.
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**2. Preguntas:** de cada informe se generan preguntas de opción múltiple. Del experto salen las de **cobertura**; del agente, las de **soporte**.
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**3. Respuestas:** otro agente responde esas preguntas usando solo el informe correspondiente.
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
-
-**4. Acuerdo:** se cuenta cuántas respuestas coinciden. Cobertura: lo del experto que el agente recupera. Soporte: lo del agente que el experto respalda.
-
-</div>
-</div>
-
-<!--
-Enfatizar que la comparación es de conclusiones, no de palabras.
 -->
 
 ---
@@ -4086,45 +3802,339 @@ Pregunta para el grupo: si una métrica da 0.92 a dos explicaciones con mecanism
 ---
 layout: top-title
 color: white
+---
+
+:: title ::
+
+# Qué mide cada métrica
+
+:: content ::
+
+<div class="mt-2">
+
+| Métrica | Mide | Resultado en el caso |
+|---|---|---|
+| ROUGE | coincidencia de palabras | 0.07 a 0.14 |
+| BERTScore | parecido semántico | 0.92 a 0.98 |
+| ICARE-S2M | mecanismos recuperados | cobertura de 21 % a 39 % |
+
+</div>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500">
+
+**Cisplatino:** BioBERT da **0.92**, pero ICARE-S2M da **0.28**. Las dos explicaciones coinciden en lo general y difieren en los mecanismos.
+
+</div>
+
+<!--
+Idea central: una similitud alta no implica que el mecanismo sea correcto.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# El benchmark y la métrica propuesta
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**S2M-bench:** 28 tareas tomadas de estudios publicados entre 2023 y 2025, curadas por expertos. Cada tarea trae contexto, firma, instrucción y una referencia validada.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**ICARE-S2M:** convierte cada informe en puntos clave y genera preguntas de opción múltiple a partir de ellos.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Cobertura:** qué fracción de los mecanismos del experto recupera el agente.
+**Soporte:** qué fracción de lo que el agente afirma está respaldado por el experto.
+
+</div>
+</div>
+
+<!--
+Explicar la diferencia: cobertura mide omisión; soporte mide afirmaciones sin respaldo.
+-->
+
+---
+layout: top-title
+color: white
 
 ---
 
 :: title ::
 
-# ¿Por qué el problema es difícil?
+# ICARE-S2M: cómo se evalúa un informe
 
 :: content ::
 
 <div class="flex flex-col gap-2 mt-2 text-sm">
 <div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**Evidencia heterogénea:** los datos vienen de varias modalidades (RNA-seq, proteómica, Ribo-seq) y de la literatura, y hay que integrarlos.
+**1. Puntos clave:** cada informe (el del experto y el del agente) se reduce a sus afirmaciones causales y funcionales.
 
 </div>
 <div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**Razonamiento causal de varios pasos:** en las tareas 3.2 y 3.3 la cobertura quedó cerca de cero en todas las configuraciones.
+**2. Preguntas:** de cada informe se generan preguntas de opción múltiple. Del experto salen las de **cobertura**; del agente, las de **soporte**.
 
 </div>
 <div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**Conocimiento implícito:** a veces el experto usa contexto que no está escrito en el estudio.
+**3. Respuestas:** otro agente responde esas preguntas usando solo el informe correspondiente.
 
 </div>
 <div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
 
-**Dos formas de fallar:** omitir mecanismos reales o introducir alternativas plausibles pero no respaldadas. La omisión fue el fallo dominante.
+**4. Acuerdo:** se cuenta cuántas respuestas coinciden. Cobertura: lo del experto que el agente recupera. Soporte: lo del agente que el experto respalda.
 
 </div>
 </div>
 
 <!--
-Conectar con la idea de que el problema es de razonamiento, no solo de lenguaje.
+Enfatizar que la comparación es de conclusiones, no de palabras.
 -->
 
 ---
 layout: top-title
 color: white
+
+---
+
+:: title ::
+
+# Tres sistemas, tres diseños
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Baseline (solo prompt):** el LLM recibe la tarea sin herramientas ni flujo de trabajo. Cobertura de 21 % a 22 %.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-sky-400 bg-white">
+
+**Biomni:** agente general biomédico. Agrega vías e interacciones regulatorias, así sube la cobertura a 25 % a 33 %, pero a menudo baja el soporte.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-emerald-500 bg-white">
+
+**Discovera:** agente especializado en la tarea. Es el de mejor alineación: cobertura de 30 % a 39 % con soporte comparable.
+
+</div>
+</div>
+
+<!--
+Mensaje clave: cambiar el diseño del agente mueve el resultado más que cambiar el modelo base.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Resultados: plausibles, pero incompletos
+
+:: content ::
+
+<div class="mt-2">
+
+| Sistema | Cobertura |
+|---|---|
+| Baseline (solo prompt) | 21 % a 22 % |
+| Biomni | 25 % a 33 % |
+| Discovera | 30 % a 39 % |
+
+</div>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-slate-50">
+
+Ningún sistema recupera la mitad de los mecanismos del experto. Los fallos más comunes son **omitir** mecanismos clave e introducir **afirmaciones sin respaldo**.
+
+</div>
+
+<!--
+Las cifras son rangos entre los dos modelos base usados (O4-Mini y Claude 3.5 Haiku).
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# ¿Qué cambia más el resultado?
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**La arquitectura del flujo** (cómo se organiza el agente y qué herramientas usa) produce un efecto unas **dos veces mayor** que cambiar el modelo base.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Algunas tareas** tienen cobertura cercana a cero en todas las configuraciones, lo que sugiere límites de los LLMs actuales, no del diseño.
+
+</div>
+</div>
+
+<!--
+Preguntar: ¿qué pasaría en su propio dominio si cambiamos el flujo en vez del modelo?
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: un agente con flujo fijo
+
+:: content ::
+
+<div class="grid grid-cols-3 gap-3 mt-2 text-sm">
+<div v-click class="p-3 rounded-lg border-2 border-sky-400 bg-white">
+
+**1. Módulo de razonamiento (LLM)**
+
+Orquesta. Decide en qué orden llamar herramientas, pero no calcula nada.
+
+</div>
+<div v-click class="p-3 rounded-lg border-2 border-emerald-500 bg-white">
+
+**2. Servidor de herramientas (MCP)**
+
+Ejecuta DESeq2, GSEA, ORA, INDRA, PubMed y GeneCards con entradas y salidas tipadas.
+
+</div>
+<div v-click class="p-3 rounded-lg border-2 border-amber-500 bg-white">
+
+**3. Almacén de artefactos**
+
+Guarda cada entrada, cada llamada y cada resultado. Así el análisis se puede auditar y repetir.
+
+</div>
+</div>
+
+<div v-click class="mt-3 p-3 rounded-lg bg-sky-50 border-l-4 border-sky-500 text-sm">
+
+**Conexión con la teoría:** el LLM hace de orquestador del ciclo de agentes. Las herramientas llegan por MCP, un protocolo común para function calling. Los artefactos son la memoria externa, en lugar de meter todo en el contexto.
+
+</div>
+
+<!--
+Notas para el instructor: el LLM es solo la capa de control. Todo el cálculo pesado sale del modelo.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: de la pregunta al informe
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 1, con conteos crudos:** pipeline completo. Lectura, DESeq2, GSEA, consulta a INDRA y ORA.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 2, con vías ya calculadas:** filtra, luego GSEA y ORA por separado, y consulta RummaGENE.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 3, con genes ya diferenciales:** salta el análisis estadístico. Consulta MyGene.info, RummaGENE y PubMed para priorizar blancos.
+
+</div>
+</div>
+
+<div v-click class="mt-3 p-3 rounded-lg bg-sky-50 border-l-4 border-sky-500 text-sm">
+
+**Conexión con la teoría:** a diferencia de un ReAct libre, el orden de las etapas no lo improvisa el modelo. El LLM solo elige qué etapas correr según la entrada. Es la diferencia entre flujo de trabajo y agente de la sección anterior.
+
+</div>
+
+<!--
+Mensaje clave: el agente no sigue un guion fijo para todas las tareas; elige qué etapas necesita según la entrada.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: evidencia y trazabilidad
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-4 mt-2 text-sm">
+<div>
+
+**Reglas de uso de la evidencia**
+
+<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
+Toda cifra, mecanismo o cita sale de una herramienta.
+</div>
+<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
+Antes de responder, el agente revisa sus propias cifras.
+</div>
+
+</div>
+<div>
+
+**Límites que reportan los autores**
+
+<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
+La calidad del mecanismo depende de los resultados de enriquecimiento previos.
+</div>
+<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
+No elimina alucinaciones ni valida causalidad. Sus hipótesis requieren experimentos.
+</div>
+
+</div>
+</div>
+
+<div v-click class="mt-3 p-3 rounded-lg bg-sky-50 border-l-4 border-sky-500 text-sm">
+
+**Conexión con la teoría:** la evaluación de la sección anterior se hace con juicio experto, no con un juez LLM. La seguridad se apoya en verificar cada cifra contra una herramienta, y aun así no elimina alucinaciones.
+
+</div>
+
+<!--
+Mensaje clave: la trazabilidad no garantiza que la conclusión sea correcta, solo que se puede revisar.
+-->
+
+---
+layout: top-title
+color: white
+
 ---
 
 :: title ::
