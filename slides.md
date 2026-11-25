@@ -2769,19 +2769,19 @@ layout: cover
 color: navy
 ---
 
+---
+theme: neversink
+title: 'LLMs y agentes: aplicación a interpretación molecular'
+layout: cover
+routerMode: hash
+transition: slide-left
+mdc: true
+---
 
 # Agentes
 
 **Escuela de Machine Learning Honduras 2026**
 
-Daniela Pinto Veizaga
-
-<div class="text-sm opacity-80 mt-6">Fundamentos · herramientas · memoria · planificación · multiagente · producción</div>
-
-<!--
-Las diapositivas con controles son interactivas. Todas las demos son simulaciones: no hay un modelo de lenguaje corriendo detrás, así funcionan sin internet y siempre igual en clase.
--->
-
 ---
 layout: top-title
 color: white
@@ -2789,415 +2789,69 @@ color: white
 
 :: title ::
 
-# Contenido
+# LLMs
 
 :: content ::
 
-<div class="grid grid-cols-4 gap-3 text-sm">
-<div class="p-3 rounded-lg border-2 border-orange-500 bg-white">
-
-### LLMs
-Tokens, embeddings, atención, probabilidades y entrenamiento.
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Fundamentos
-Flujos vs. agentes, el ciclo ReAct y los tipos clásicos de agentes.
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Herramientas
-Function calling, buenas interfaces y protocolos (MCP, A2A).
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Memoria
-Ventana de contexto, memoria de largo plazo y RAG.
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Planificación
-Reflexión, descomposición en tareas y saber cuándo parar.
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Multiagente
-Orquestar o colaborar, roles y frameworks.
-</div>
-<div class="p-3 rounded-lg border-2 border-slate-200 bg-white">
-
-### Producción
-Evaluar, observar y proteger un agente real.
-</div>
-</div>
-
----
-layout: section
-color: indigo
----
-
-# ¿Qué es un LLM?
-
-El motor de todo agente
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Un modelo de lenguaje predice la siguiente palabra
-
-:: left ::
-
-Un **modelo de lenguaje** asigna una probabilidad a cada posible continuación de un texto:
-
-$$P(\text{siguiente token} \mid \text{texto anterior})$$
-
-<v-click>
-
-Con la **regla de la cadena**, la probabilidad de un texto completo es:
-
-$$P(u_1,\dots,u_n) = \prod_{t=1}^{n} P(u_t \mid u_1,\dots,u_{t-1})$$
-
-</v-click>
-
-<v-click>
-
-Un **LLM** (*Large Language Model*) es un modelo de lenguaje **grande**: miles de millones de parámetros, entrenado con billones de tokens.
-
-</v-click>
-
-:: right ::
-
-<div class="p-4 rounded-lg border-2 border-slate-200 bg-white text-lg">
-
-«La capital de Honduras es ___»
-
-<v-clicks>
-
-- Tegucigalpa · **0.92**
-- una · 0.03
-- la · 0.02
-- …
-
-</v-clicks>
-
-</div>
-
-<div v-click class="mt-4">
-
-Para escribir un párrafo, el modelo **repite**: predice un token, lo agrega al texto y vuelve a predecir. A esto se le llama generación **autorregresiva**.
-
-</div>
-
-<div class="text-xs text-slate-500 mt-2">Probabilidades ilustrativas.</div>
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Paso 1: del texto a números (tokens)
-
-:: left ::
-
-Un modelo no lee letras ni palabras: lee **tokens**, pedazos de texto con un número de identificación (ID).
-
-<v-clicks>
-
-- Palabras comunes → un token: `▁modelo`.
-- Palabras raras → varios: `▁entren` + `amos`.
-- El vocabulario de un LLM tiene del orden de **100 000** tokens.
-
-</v-clicks>
-
-:: right ::
-
-<v-click>
-
-**BPE** (*Byte Pair Encoding*), el algoritmo más usado:
-
-1. Empieza con letras sueltas.
-2. Cuenta qué **par** de símbolos aparece más seguido.
-3. Lo **fusiona** en un símbolo nuevo.
-4. Repite miles de veces.
-
-</v-click>
-
-<div v-click class="mt-3 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500 text-sm">
-
-¿Por qué importa? Los modelos **cobran por token**, la ventana de contexto se mide en tokens y el español suele usar más tokens que el inglés para decir lo mismo.
-
-</div>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: entrena un tokenizador BPE
-
-:: content ::
-
-<AgTokens />
-
-<!--
-1) Con 0 fusiones cada letra es un token. 2) Subir las fusiones: aparecen pedazos como «es», «ción», «▁de». 3) Escribir una palabra que no está en el corpus: se parte en muchos tokens. El tokenizador se entrena en el navegador con unas pocas frases.
--->
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Paso 2: de tokens a vectores (embeddings)
-
-:: left ::
-
-Cada token se convierte en un **vector** de $d$ números (un *embedding*), con $d$ en los miles.
-
-<v-click>
-
-Los vectores se **aprenden** de forma que palabras con significado parecido queden **cerca**:
-
-$$\text{similitud}(u, v) = \cos\theta = \frac{u \cdot v}{\lVert u\rVert\,\lVert v\rVert}$$
-
-</v-click>
-
-<v-click>
-
-Además se agrega información de **posición**, porque «el perro mordió al hombre» ≠ «el hombre mordió al perro».
-
-</v-click>
-
-:: right ::
-
-<svg viewBox="0 0 360 260" width="360" height="260">
-  <line x1="20" y1="240" x2="350" y2="240" stroke="#cbd5e1"/><line x1="20" y1="240" x2="20" y2="10" stroke="#cbd5e1"/>
-  <g style="font-size:14px">
-    <circle cx="90" cy="70" r="6" fill="#2563eb"/><text x="100" y="74">gato</text>
-    <circle cx="120" cy="95" r="6" fill="#2563eb"/><text x="130" y="99">perro</text>
-    <circle cx="70" cy="110" r="6" fill="#2563eb"/><text x="80" y="114">mascota</text>
-    <circle cx="260" cy="190" r="6" fill="#ea580c"/><text x="270" y="194">Python</text>
-    <circle cx="230" cy="215" r="6" fill="#ea580c"/><text x="240" y="219">código</text>
-    <circle cx="290" cy="60" r="6" fill="#15803d"/><text x="300" y="64">Tegucigalpa</text>
-    <circle cx="250" cy="85" r="6" fill="#15803d"/><text x="260" y="89">Honduras</text>
-  </g>
-  <text x="185" y="256" text-anchor="middle" style="font-size:11px" fill="#64748b">proyección en 2D de vectores con miles de dimensiones (ilustrativa)</text>
-</svg>
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Paso 3: el Transformer y la atención
-
-:: left ::
-
-La arquitectura detrás de los LLM es el **Transformer** (Vaswani et al., 2017). Su pieza clave es la **atención**: cada token decide a qué otros tokens mirar.
-
-<v-click>
-
-Cada token produce tres vectores: **consulta** $q$ («qué busco»), **clave** $k$ («qué ofrezco») y **valor** $v$ («qué información llevo»).
-
-</v-click>
-
-<v-click>
-
-$$\text{Atención}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V$$
-
-</v-click>
-
-:: right ::
-
-<v-clicks>
-
-1. $q \cdot k$: qué tanto se relacionan dos tokens.
-2. $/\sqrt{d_k}$: evita que los números crezcan demasiado.
-3. **softmax**: convierte los puntajes en pesos que suman 1.
-4. Multiplicar por $V$: mezcla la información según esos pesos.
-
-Un LLM apila **decenas de capas** de atención, cada una con varias «cabezas» en paralelo.
-
-</v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: ¿quién tenía hambre?
-
-:: content ::
-
-<AgAttention />
-
-<!--
-Clic en «tenía»: la mayor parte de la atención va a «gato», así el modelo resuelve quién tenía hambre. Clic en «comió»: mira a «gato» y «pescado» (sujeto y objeto). Apagar «dividir entre √d»: los pesos se vuelven extremos. Los vectores son de juguete, hechos a mano para que el ejemplo sea claro.
--->
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Paso 4: de puntajes a probabilidades
-
-:: left ::
-
-La última capa da un puntaje (*logit*) $z_i$ para **cada** token del vocabulario. La **softmax con temperatura** los convierte en probabilidades:
-
-$$p_i = \frac{e^{z_i/T}}{\sum_j e^{z_j/T}}$$
-
-<v-clicks>
-
-- $T \to 0$: siempre el más probable (determinista).
-- $T = 1$: la distribución aprendida.
-- $T > 1$: más aleatorio y creativo… y más errores.
-
-</v-clicks>
-
-:: right ::
-
-**Estrategias para elegir el siguiente token**
-
-<v-clicks>
-
-- **Codiciosa** (*greedy*): el de mayor probabilidad.
-- **Muestreo**: sortear según las probabilidades.
-- **Top-k**: sortear solo entre los $k$ más probables.
-- **Top-p** (*nucleus*): sortear entre los más probables hasta sumar una probabilidad $p$.
-
-Por eso el mismo prompt puede dar **respuestas distintas**: es importante para evaluar agentes.
-
-</v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: un mini modelo de lenguaje
-
-:: content ::
-
-<AgNextToken />
-
-<!--
-Modelo de trigramas entrenado en el navegador con ~20 frases: cuenta qué palabra sigue a cada par de palabras. 1) «Más probable» varias veces: siempre la misma frase. 2) Muestrear con T = 1 y luego T = 3. 3) Bajar top-p a 0.5: desaparecen las opciones raras. Un LLM real reemplaza los conteos por una red neuronal, pero el paso final es el mismo.
--->
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# ¿Cómo aprende un LLM?
-
-:: left ::
-
-Se ajustan los parámetros $\theta$ para que el modelo le dé **alta probabilidad al token correcto**. Se minimiza la **entropía cruzada**:
-
-$$\mathcal{L}(\theta) = -\frac{1}{N}\sum_{t=1}^{N} \log p_\theta(u_t \mid u_{<t})$$
-
-<v-click>
-
-Con **descenso por gradiente**:
-
-$$\theta \leftarrow \theta - \eta\, \nabla_\theta \mathcal{L}$$
-
-</v-click>
-
-<v-click>
-
-La **perplejidad** $= e^{\mathcal{L}}$ mide qué tan «sorprendido» está el modelo: menos es mejor.
-
-</v-click>
-
-:: right ::
-
-<v-click>
-
-**Ejemplo con un solo token.** El texto real es «Tegucigalpa»:
-
-| El modelo le da | Pérdida $-\log p$ |
-|---|---|
-| 0.92 | 0.08 |
-| 0.50 | 0.69 |
-| 0.01 | 4.61 |
-
-Equivocarse con mucha seguridad **cuesta muchísimo**.
-
-</v-click>
-
-<div v-click class="mt-2 text-sm">Es la misma entropía cruzada de la regresión logística del módulo 4, pero con ~100 000 clases: una por token.</div>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Las etapas de entrenamiento
-
-:: content ::
-
-<div class="grid grid-cols-4 gap-3 mt-2">
+<div class="grid grid-cols-2 gap-3 mt-2 text-sm">
 <div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white">
 
-### 1 · Preentrenamiento
-Predecir el siguiente token en **billones** de tokens de texto y código.
+**1 · Tokens:** el texto se parte en pedazos con un ID.
 
-<div class="text-sm text-slate-500 mt-2">Resultado: sabe mucho, pero solo «continúa» textos.</div>
 </div>
 <div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white">
 
-### 2 · Ajuste con instrucciones
-Ejemplos de *pregunta → buena respuesta* (SFT).
+**2 · Embeddings:** cada token es un vector; palabras parecidas quedan cerca.
 
-<div class="text-sm text-slate-500 mt-2">Resultado: sigue instrucciones y conversa.</div>
 </div>
 <div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white">
 
-### 3 · Alineación con preferencias
-Personas comparan respuestas; el modelo aprende a preferir las mejores (RLHF, DPO).
+**3 · Atención (Transformer):** cada token mira a los demás para decidir qué importa.
 
-<div class="text-sm text-slate-500 mt-2">Resultado: más útil, honesto y seguro.</div>
 </div>
-<div v-click class="p-3 rounded-lg border-2 border-orange-500 bg-white">
+<div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white">
 
-### 4 · Herramientas y razonamiento
-Ejemplos y aprendizaje por refuerzo para **llamar funciones** y **razonar paso a paso**.
+**4 · Probabilidades:** una softmax da una probabilidad a cada token posible. El modelo predice la siguiente palabra.
 
-<div class="text-sm text-slate-500 mt-2">Resultado: la base de un agente.</div>
 </div>
 </div>
+
+<!--
+Repaso de una diapositiva. Demos opcionales si hay tiempo: AgNextToken (trigramas) y AgAttention. El detalle matemático ya se vio en otra clase.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Cómo aprende un LLM y qué le falta
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Preentrenamiento:** predecir el siguiente token en billones de tokens de texto y código. Sabe mucho, pero solo continúa textos.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Ajuste con instrucciones:** ejemplos de *pregunta → buena respuesta*. Así responde y sigue órdenes.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-orange-500 bg-orange-50">
+
+**Lo que le falta:** actuar sobre el mundo. Para eso se le agregan herramientas y un ciclo: eso es un **agente**.
+
+</div>
+</div>
+
+<!--
+Puente a la sección de agentes.
+-->
 
 ---
 layout: two-cols-title
@@ -4696,4 +4350,195 @@ Otros recursos
 
 **Idea para llevarse:** un agente es un LLM en un ciclo con herramientas. Lo difícil no es el ciclo: es darle **buenas herramientas**, el **contexto correcto**, **límites claros** y **evaluarlo** en serio.
 
+</div>
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Caso aplicado: de la firma molecular al mecanismo
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Firma molecular:** lista de genes o proteínas que cambian entre dos condiciones (por ejemplo, tumores con y sin una mutación).
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Pregunta:** ¿la explicación que genera el agente recupera el mecanismo que un experto encontró en el estudio?
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea S2M (Signature-to-Mechanisms):** dado el contexto del estudio, la firma y una instrucción, el agente escribe un informe de mecanismos.
+
+</div>
+</div>
+
+<!--
+Usar el ejemplo del cisplatino o de un tumor con mutación en CTNNB1 para aterrizar la idea.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Por qué la similitud de texto no basta
+
+:: content ::
+
+<div class="mt-2">
+
+| Métrica | Mide | Resultado en el caso |
+|---|---|---|
+| ROUGE | coincidencia de palabras | 0.07 a 0.14 |
+| BERTScore | parecido semántico | 0.92 a 0.98 |
+| ICARE-S2M | mecanismos recuperados | cobertura de 21 % a 39 % |
+
+</div>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500">
+
+**Cisplatino:** BioBERT da **0.92**, pero ICARE-S2M da **0.28**. Las dos explicaciones coinciden en lo general y difieren en los mecanismos.
+
+</div>
+
+<!--
+Idea central: una similitud alta no implica que el mecanismo sea correcto.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# El benchmark y la métrica propuesta
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**S2M-bench:** 28 tareas tomadas de estudios publicados entre 2023 y 2025, curadas por expertos. Cada tarea trae contexto, firma, instrucción y una referencia validada.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**ICARE-S2M:** convierte cada informe en puntos clave y genera preguntas de opción múltiple a partir de ellos.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Cobertura:** qué fracción de los mecanismos del experto recupera el agente.
+**Soporte:** qué fracción de lo que el agente afirma está respaldado por el experto.
+
+</div>
+</div>
+
+<!--
+Explicar la diferencia: cobertura mide omisión; soporte mide afirmaciones sin respaldo.
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Resultados: plausibles, pero incompletos
+
+:: content ::
+
+<div class="mt-2">
+
+| Sistema | Cobertura |
+|---|---|
+| Baseline (solo prompt) | 21 % a 22 % |
+| Biomni | 25 % a 33 % |
+| Discovera | 30 % a 39 % |
+
+</div>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-slate-50">
+
+Ningún sistema recupera la mitad de los mecanismos del experto. Los fallos más comunes son **omitir** mecanismos clave e introducir **afirmaciones sin respaldo**.
+
+</div>
+
+<!--
+Las cifras son rangos entre los dos modelos base usados (O4-Mini y Claude 3.5 Haiku).
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# ¿Qué cambia más el resultado?
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**La arquitectura del flujo** (cómo se organiza el agente y qué herramientas usa) produce un efecto unas **dos veces mayor** que cambiar el modelo base.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Algunas tareas** tienen cobertura cercana a cero en todas las configuraciones, lo que sugiere límites de los LLMs actuales, no del diseño.
+
+</div>
+</div>
+
+<!--
+Preguntar: ¿qué pasaría en su propio dominio si cambiamos el flujo en vez del modelo?
+-->
+
+---
+layout: top-title
+color: white
+---
+
+:: title ::
+
+# Conclusiones
+
+:: content ::
+
+<div class="flex flex-col gap-2 mt-2">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**1.** Una similitud alta no implica mecanismo correcto.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**2.** El fallo dominante es la **omisión** de mecanismos, no el texto absurdo.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**3.** El diseño del flujo de trabajo importa tanto como el modelo elegido.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**4.** Incluso los mejores sistemas recuperan menos de la mitad de los mecanismos.
+
+</div>
 </div>
