@@ -2777,10 +2777,13 @@ routerMode: hash
 transition: slide-left
 mdc: true
 ---
-
 # Agentes
 
 **Escuela de Machine Learning Honduras 2026**
+
+<!--
+Versión corta de la sección de LLMs y agentes. La teoría de LLMs se cubre en otra clase; aquí solo se repasa lo necesario para el caso.
+-->
 
 ---
 layout: top-title
@@ -2789,7 +2792,7 @@ color: white
 
 :: title ::
 
-# LLMs
+# El LLM en una idea
 
 :: content ::
 
@@ -2898,45 +2901,6 @@ color: white
 
 :: title ::
 
-# Del LLM al agente, en cinco escalones
-
-:: content ::
-
-<div class="flex flex-col gap-2 mt-1">
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white" style="margin-left:0px">
-
-**1 · LLM base**: completa texto. $\;a \sim p_\theta(\cdot \mid \text{prompt})$
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white" style="margin-left:50px">
-
-**2 · LLM de instrucciones**: responde preguntas y sigue órdenes.
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white" style="margin-left:100px">
-
-**3 · LLM + herramientas**: en vez de texto, puede generar una **llamada a función** en JSON.
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white" style="margin-left:150px">
-
-**4 · LLM en un ciclo**: el resultado de la herramienta vuelve como entrada y decide el siguiente paso. **Esto ya es un agente.**
-
-</div>
-<div v-click class="p-2 pl-4 rounded-lg border-2 border-orange-500 bg-white" style="margin-left:200px">
-
-**5 · Agente completo**: + memoria + planificación + límites + evaluación.
-
-</div>
-</div>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
 # Del chatbot al agente
 
 :: content ::
@@ -2972,55 +2936,6 @@ Un **agente** es un modelo de lenguaje que **usa herramientas en un ciclo** y **
 </div>
 
 ---
-layout: section
-color: sky
----
-
-# 1 · Fundamentos
-
-Flujos de trabajo, agentes y el ciclo ReAct
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# El bloque básico: el LLM aumentado
-
-:: left ::
-
-<svg viewBox="0 0 380 260" width="380" height="260">
-  <rect x="130" y="100" width="120" height="60" rx="12" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
-  <text x="190" y="136" text-anchor="middle" style="font-size:18px;font-weight:700" fill="#0f172a">LLM</text>
-  <g v-click="1"><rect x="10" y="20" width="110" height="44" rx="10" fill="#f8fafc" stroke="#475569"/><text x="65" y="47" text-anchor="middle" style="font-size:14px">🔧 Herramientas</text><line x1="120" y1="55" x2="150" y2="100" stroke="#64748b" stroke-width="2"/></g>
-  <g v-click="2"><rect x="260" y="20" width="110" height="44" rx="10" fill="#f8fafc" stroke="#475569"/><text x="315" y="47" text-anchor="middle" style="font-size:14px">📚 Recuperación</text><line x1="260" y1="55" x2="230" y2="100" stroke="#64748b" stroke-width="2"/></g>
-  <g v-click="3"><rect x="135" y="200" width="110" height="44" rx="10" fill="#f8fafc" stroke="#475569"/><text x="190" y="227" text-anchor="middle" style="font-size:14px">🧠 Memoria</text><line x1="190" y1="160" x2="190" y2="200" stroke="#64748b" stroke-width="2"/></g>
-  <text x="10" y="140" style="font-size:13px" fill="#64748b">entrada →</text>
-  <text x="262" y="140" style="font-size:13px" fill="#64748b">→ salida</text>
-</svg>
-
-:: right ::
-
-Todo sistema con agentes empieza aquí: un LLM al que le damos
-
-<v-clicks>
-
-- **herramientas** para actuar (APIs, código, buscadores);
-- **recuperación** para consultar información que no memorizó;
-- **memoria** para recordar lo que pasó antes.
-
-</v-clicks>
-
-<div v-click="4" class="mt-4 p-3 rounded-lg border-2 border-orange-500 bg-white">
-
-Con estas piezas se arman **flujos de trabajo** o **agentes**. La diferencia está en **quién decide el camino**.
-
-</div>
-
----
 layout: top-title
 color: white
 ---
@@ -3047,23 +2962,6 @@ color: white
 
 <!--
 Esta distinción viene del artículo «Building effective agents» de Anthropic (diciembre de 2024): los flujos coordinan LLMs y herramientas por caminos de código predefinidos; los agentes dirigen dinámicamente su propio proceso.
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: seis patrones, del más fijo al más autónomo
-
-:: content ::
-
-<AgPatterns />
-
-<!--
-Recorrer en orden. Preguntar en cada uno: ¿quién decide el camino, el código o el modelo? En orquestador–trabajadores el número de trabajadores cambia en cada simulación: eso ya lo decide el LLM.
 -->
 
 ---
@@ -3130,106 +3028,6 @@ color: white
 -->
 
 ---
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Las matemáticas de un agente
-
-:: left ::
-
-Un agente actúa en un mundo que **no ve completo**. Se modela como un **POMDP** (proceso de decisión de Markov parcialmente observable):
-
-<v-clicks>
-
-- $s_t$: **estado** real del mundo (oculto).
-- $o_t$: **observación** (lo que devuelve una herramienta).
-- $a_t$: **acción** (llamar una herramienta o responder).
-- $h_t = (o_1, a_1, \dots, o_t)$: **historia**, que es justo el contexto del LLM.
-
-</v-clicks>
-
-:: right ::
-
-<v-click>
-
-El LLM es la **política** del agente:
-
-$$a_t \sim \pi_\theta(a \mid h_t)$$
-
-</v-click>
-
-<v-click>
-
-La probabilidad de una **trayectoria** completa $\tau$:
-
-$$P(\tau) = \prod_{t} \pi_\theta(a_t \mid h_t)\; P(o_{t+1} \mid s_t, a_t)$$
-
-</v-click>
-
-<v-click>
-
-Lo que buscamos: **máxima recompensa** esperada con **poco costo**:
-
-$$\max_{\pi}\; \mathbb{E}_{\tau \sim \pi}\big[R(\tau)\big] - \lambda\, \mathbb{E}_{\tau \sim \pi}\big[\text{costo}(\tau)\big]$$
-
-</v-click>
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Dos consecuencias de las matemáticas
-
-:: left ::
-
-### 1 · Los errores se multiplican
-
-Si cada paso sale bien con probabilidad $r$ y los pasos son independientes:
-
-$$P(\text{éxito en } n \text{ pasos}) = r^n$$
-
-<v-click>
-
-| $r$ por paso | 10 pasos | 30 pasos |
-|---|---|---|
-| 99 % | 90 % | 74 % |
-| 95 % | 60 % | 21 % |
-| 90 % | 35 % | 4 % |
-
-Por eso conviene **pocos pasos**, **verificar** a mitad del camino y **recuperarse** de errores.
-
-</v-click>
-
-:: right ::
-
-### 2 · Decidir con utilidad esperada
-
-<v-click>
-
-Antes de una acción, el agente compara:
-
-$$\mathbb{E}[U(\text{actuar})] = p\,B - (1-p)\,C_{\text{error}}$$
-$$\mathbb{E}[U(\text{preguntar})] = B - C_{\text{preguntar}}$$
-
-</v-click>
-
-<v-click>
-
-Conviene actuar solo si su confianza $p$ supera el umbral:
-
-$$p^* = 1 - \frac{C_{\text{preguntar}}}{B + C_{\text{error}}}$$
-
-</v-click>
-
----
 layout: top-title
 color: white
 ---
@@ -3245,55 +3043,6 @@ color: white
 <!--
 1) «Responder una duda»: el umbral es bajo, el agente puede actuar casi siempre. 2) «Enviar un correo»: hay que estar más seguro. 3) «Borrar registros»: el umbral se acerca a 1; casi siempre conviene preguntar. Conecta con metacognición y con seguridad: las acciones irreversibles merecen confirmación.
 -->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Tipos clásicos de agentes
-
-:: content ::
-
-De la inteligencia artificial clásica (Russell y Norvig). Cada tipo agrega una capacidad:
-
-| Tipo | Qué agrega | Pregunta que se hace |
-|---|---|---|
-| Reflejo simple | reglas condición → acción | «¿Qué veo ahora?» |
-| Basado en modelo | un estado interno del mundo | «¿Cómo está el mundo, aunque no lo vea?» |
-| Basado en metas | una meta y planificación | «¿Qué me acerca a la meta?» |
-| Basado en utilidad | una medida de qué tan bueno es cada resultado | «¿Cuál opción es **mejor**?» |
-| Que aprende | mejora con la experiencia | «¿Cómo lo hago mejor la próxima vez?» |
-
-<div class="mt-4 text-sm">Un agente con LLM mezcla varios: usa un **modelo** del mundo (su contexto), persigue **metas** y puede **aprender** de la retroalimentación.</div>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: cuatro robots de limpieza, un mismo mapa
-
-:: content ::
-
-<AgWorld />
-
-<!--
-Comparar con el mismo mapa: el reflejo simple vaga al azar; el basado en modelo explora mejor; el de metas va directo a la suciedad pero se queda sin batería; el de utilidad sacrifica pasos para recargar y termina. Pregunta: ¿cuál tiene mejor utilidad y por qué?
--->
-
----
-layout: section
-color: violet
----
-
-# 2 · Herramientas
-
-Cómo un modelo de lenguaje actúa en el mundo
 
 ---
 layout: two-cols-title
@@ -3359,89 +3108,6 @@ color: white
 -->
 
 ---
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Interfaces agente-computadora (ACI)
-
-:: content ::
-
-Diseña tus herramientas pensando en quien las va a usar: **un modelo**. Dedícale tanto cuidado como al prompt.
-
-<div class="grid grid-cols-2 gap-x-8 mt-2">
-<div>
-<v-clicks>
-
-- **Nombres y descripciones claros**, con ejemplos de uso.
-- **Parámetros difíciles de usar mal**: `enum`, tipos, valores obligatorios.
-- **Errores que enseñan**: «usa `nombre_completo`», no solo «error 400».
-- **Respuestas cortas** y relevantes: cada token cuesta.
-
-</v-clicks>
-</div>
-<div>
-<v-clicks>
-
-- **Ambiente aislado** (*sandbox*) para ejecutar código.
-- **Mínimo privilegio**: solo las herramientas que la tarea necesita.
-- **Pruébalas** con el modelo y revisa sus errores.
-- **Pocas herramientas bien hechas** mejor que muchas confusas.
-
-</v-clicks>
-</div>
-</div>
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Protocolos: MCP y A2A
-
-:: left ::
-
-### MCP · Model Context Protocol
-
-Estándar abierto para **conectar una aplicación de IA con herramientas y datos**: se escribe un servidor una vez y lo usa cualquier cliente compatible.
-
-- Un servidor MCP ofrece **herramientas**, **recursos** y **prompts**.
-- Lo presentó Anthropic en noviembre de 2024; en diciembre de 2025 lo donó a la Agentic AI Foundation, de la Linux Foundation.
-
-:: right ::
-
-### A2A · Agent-to-Agent
-
-Estándar abierto para que **agentes de distintos proveedores se comuniquen** y se deleguen tareas.
-
-- Cada agente publica una **Agent Card**: qué sabe hacer y cómo contactarlo.
-- Lo lanzó Google en abril de 2025 y desde junio de 2025 lo aloja la Linux Foundation.
-
-<div v-click class="mt-4 p-3 rounded-lg border-2 border-orange-500 bg-white">
-
-Se **complementan**: MCP conecta un agente con sus **herramientas**; A2A conecta **agentes entre sí**.
-
-</div>
-
-<!--
-Fuentes: anuncio de Anthropic del 9 de diciembre de 2025 sobre la donación de MCP a la Agentic AI Foundation; comunicado de la Linux Foundation del 9 de abril de 2026 sobre A2A (más de 150 organizaciones). Estos estándares evolucionan rápido: revisar modelcontextprotocol.io y a2a-protocol.org antes de cada edición del curso.
--->
-
----
-layout: section
-color: emerald
----
-
-# 3 · Memoria y contexto
-
-Qué recuerda un agente y cómo
-
----
 layout: two-cols-title
 columns: is-6
 color: white
@@ -3497,31 +3163,6 @@ color: white
 <!--
 1) Con «Guardar todo», subir los turnos hasta desbordar 32 000 tokens. 2) Cambiar a ventana deslizante: ya cabe, pero se olvidan turnos. 3) Resumen: se conserva la idea de lo viejo. 4) Subir herramientas a 60: las herramientas también ocupan contexto.
 -->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Memoria de largo plazo
-
-:: content ::
-
-Lo que debe sobrevivir entre conversaciones se guarda **fuera** del modelo y se recupera cuando hace falta.
-
-| Tipo | Qué guarda | Ejemplo |
-|---|---|---|
-| **Episódica** | experiencias pasadas | «La semana pasada el usuario pidió gráficas en azul» |
-| **Semántica** | hechos y conocimiento | «El curso dura 6 semanas», documentos, manuales |
-| **Procedimental** | cómo hacer las cosas | instrucciones, reglas aprendidas, habilidades |
-
-<div v-click class="mt-4">
-
-**¿Dónde se guarda?** Muchas veces en una **base de datos vectorial**: cada texto se convierte en un **embedding** (un vector que representa su significado) y se busca por **similitud**, no por palabras exactas.
-
-</div>
 
 ---
 layout: two-cols-title
@@ -3582,15 +3223,6 @@ color: white
 -->
 
 ---
-layout: section
-color: amber
----
-
-# 4 · Planificación y razonamiento
-
-Reflexionar, descomponer y saber cuándo parar
-
----
 layout: two-cols-title
 columns: is-6
 color: white
@@ -3645,214 +3277,6 @@ Avanzar con «Evaluar» y «Corregir». Luego poner el máximo en 2: el ciclo se
 -->
 
 ---
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Descomposición y planificación
-
-:: left ::
-
-Una meta abierta se parte en **subtareas**:
-
-<v-clicks>
-
-- **Lista de pasos**: plan lineal, fácil de seguir.
-- **Árbol de pensamientos** (*Tree of Thoughts*): explorar varias ramas, evaluarlas y quedarse con la mejor.
-- **DAG** (grafo dirigido acíclico): qué tarea **depende** de cuál. Lo independiente corre **en paralelo**.
-
-</v-clicks>
-
-:: right ::
-
-<v-clicks>
-
-**Planificar y luego ejecutar**:
-
-1. El agente escribe un plan.
-2. Lo ejecuta paso a paso.
-3. Si algo falla, **replanifica** en vez de insistir.
-
-Un plan explícito también ayuda a los **humanos**: se puede revisar antes de ejecutar.
-
-</v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: un plan como grafo de tareas
-
-:: content ::
-
-<AgPlan />
-
-<!--
-1) Ejecutar el plan: «Descargar datos» y «Buscar estudios» corren en paralelo. 2) Activar la falla: el agente agrega «Modelo más simple» y reconecta el grafo. Comparar los turnos de tiempo con hacer las 8 tareas una por una.
--->
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Metacognición: saber cuándo parar
-
-:: left ::
-
-Un buen agente sabe:
-
-<v-clicks>
-
-- **Cuándo terminó**: hay criterio de éxito.
-- **Cuándo está atascado**: repite la misma acción con el mismo resultado.
-- **Cuándo pedir ayuda**: falta información, hay ambigüedad o la acción es riesgosa.
-- **Cuándo no le alcanza el presupuesto**: pasos, tiempo o dinero.
-
-</v-clicks>
-
-:: right ::
-
-<v-clicks>
-
-**Se implementa con dos cosas:**
-
-1. **Reglas en tu código**: máximo de pasos, presupuesto de tokens, detector de acciones repetidas.
-2. **Instrucciones al modelo**: «si no estás seguro, pregunta», «si una herramienta falla dos veces, cambia de estrategia».
-
-Pedir ayuda a tiempo **no es un fracaso**: es mejor que inventar una respuesta o gastar sin avanzar.
-
-</v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: un agente atascado
-
-:: content ::
-
-<AgReact start="bucle" />
-
-<!--
-Apagar el detector de repeticiones y subir el límite de pasos a 15: el agente desperdicia llamadas. Encender el detector: se detiene al tercer intento y le pide al usuario la información que falta.
--->
-
----
-layout: section
-color: pink
----
-
-# 5 · Sistemas multiagente
-
-Varios agentes especializados trabajando juntos
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Orquestar o colaborar
-
-:: left ::
-
-### Orquestación (centralizada)
-Un **orquestador** reparte el trabajo a **trabajadores** y junta los resultados.
-
-### Colaboración (descentralizada)
-Los agentes **conversan entre pares** y se reparten el trabajo solos («enjambre»).
-
-:: right ::
-
-### Especialización de roles
-
-Cada subagente puede tener:
-
-<v-clicks>
-
-- su **rol** y sus instrucciones (investigador, analista, revisor…);
-- sus propias **herramientas** (solo el analista ejecuta código);
-- su propia **memoria** y su propio contexto, más pequeño y enfocado.
-
-</v-clicks>
-
-<div v-click class="mt-3 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500 text-sm">
-
-Más agentes **no siempre es mejor**: multiplican el costo y los puntos de falla. Úsalos cuando la tarea se divide de forma natural.
-
-</div>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: tres formas de organizar un equipo de agentes
-
-:: content ::
-
-<AgMulti />
-
-<!--
-Correr las tres topologías y comparar mensajes. El enjambre suele usar muchos más mensajes y cambia en cada corrida. Pregunta: ¿cuál depurarías más fácil si el informe sale mal?
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Frameworks para construir agentes
-
-:: content ::
-
-| Framework | Idea central | Bueno para |
-|---|---|---|
-| **LangGraph** | el agente como un **grafo de estados** con ciclos | control fino, flujos con bucles |
-| **LlamaIndex** | conectar LLMs con **tus datos** | RAG y agentes sobre documentos |
-| **CrewAI** | equipos de agentes con **roles** | multiagente por roles |
-| **AutoGen** | agentes que **conversan** entre sí | colaboración entre pares |
-| **smolagents** | agentes mínimos que **escriben código** como acciones | aprender, prototipos |
-
-<div v-click class="mt-4">
-
-Los frameworks cambian muy rápido; **los patrones no**. Aprende primero el ciclo con llamadas directas a la API y usa un framework cuando te ahorre trabajo real.
-
-</div>
-
-<!--
-Para práctica guiada: el curso gratuito de agentes de Hugging Face usa smolagents, LlamaIndex y LangGraph; el curso «AI Agents for Beginners» de Microsoft usa AutoGen y Semantic Kernel. Verificar versiones antes de clase.
--->
-
----
-layout: section
-color: red
----
-
-# 6 · Producción, evaluación y seguridad
-
-De la demo al sistema confiable
-
----
 layout: top-title
 color: white
 ---
@@ -3876,60 +3300,6 @@ color: white
 **Precisión de herramientas** $=\dfrac{\text{llamadas correctas}}{\text{llamadas hechas}}$ · **Recall de herramientas** $=\dfrac{\text{llamadas correctas}}{\text{llamadas esperadas}}$, igual que en clasificación (módulo 4).
 
 </div>
-
----
-layout: two-cols-title
-columns: is-6
-color: white
----
-
-:: title ::
-
-# Cuántas tareas necesito: intervalos de confianza
-
-:: left ::
-
-Una tasa de éxito medida con pocas tareas es **muy incierta**. Intervalo de confianza aproximado del 95 %:
-
-$$\hat p \pm 1.96\sqrt{\frac{\hat p\,(1-\hat p)}{n}}$$
-
-<v-click>
-
-| Tareas $n$ | Éxito medido | IC 95 % aprox. |
-|---|---|---|
-| 10 | 70 % | 42 % – 98 % |
-| 50 | 70 % | 57 % – 83 % |
-| 500 | 70 % | 66 % – 74 % |
-
-</v-click>
-
-:: right ::
-
-<v-clicks>
-
-- Con 10 tareas, un agente de 70 % y uno de 90 % pueden **no distinguirse**.
-- Antes de decir «mejoró», revisa si los intervalos se **traslapan**.
-- Los agentes **no son deterministas**: corre cada tarea **varias veces** y reporta media y variación.
-- Con pocas tareas, el intervalo de Wilson es más confiable que esta fórmula.
-
-</v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: evaluar dos agentes y a su juez
-
-:: content ::
-
-<AgEvalMetrics />
-
-<!--
-1) Agente A: 80 % de éxito, pero con dos violaciones de política (reembolsó sin verificar). 2) Agente B: 90 %, sin violaciones, más pasos y más caro. 3) Mirar el IC 95 %: con 10 tareas se traslapan mucho. 4) Panel del juez: corregir sus votos hasta que κ sea «muy bueno». Un juez LLM debe validarse contra etiquetas humanas antes de confiar en él. Datos simulados.
--->
 
 ---
 layout: two-cols-title
@@ -3974,35 +3344,6 @@ $\kappa$ cercano a 1: el juez coincide con las personas. $\kappa \approx 0$: no 
 </v-click>
 
 ---
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Benchmarks públicos de agentes
-
-:: content ::
-
-| Benchmark | Qué evalúa | Cómo se califica |
-|---|---|---|
-| **SWE-bench Verified** | resolver issues reales de GitHub en proyectos de Python (500 tareas verificadas por personas) | las pruebas del repositorio pasan |
-| **GAIA** | preguntas de asistente general que exigen navegar, usar herramientas y razonar (466 tareas, 3 niveles) | respuesta exacta |
-| **WebArena** | tareas en sitios web simulados (tiendas, foros, GitLab) | estado final del sitio |
-| **OSWorld** | usar aplicaciones de escritorio reales | estado final del sistema |
-| **τ-bench** | atención a clientes con un usuario simulado y reglas del negocio | estado final de la base de datos; introdujo pass$^k$ |
-
-<div v-click class="mt-4 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500 text-sm">
-
-Los benchmarks sirven para **comparar modelos**, pero no representan **tu** problema y pueden estar en los datos de entrenamiento. Arma también tu **propio conjunto de evaluación** con casos reales.
-
-</div>
-
-<!--
-τ-bench (Yao et al., 2024) propuso pass^k: probabilidad de que las k corridas de la misma tarea salgan bien. Sus autores reportaron que incluso los mejores agentes de entonces bajaban mucho de pass^1 a pass^8. Los puntajes de estos benchmarks cambian cada pocos meses: consultar los leaderboards antes de citarlos en clase.
--->
-
----
 layout: two-cols-title
 columns: is-6
 color: white
@@ -4033,23 +3374,6 @@ probabilidad de que **todos** salgan bien.
 - Con $p = 0.7$: pass@3 ≈ 97 %, pero pass$^3$ ≈ 34 %.
 
 </v-clicks>
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: confiabilidad y errores que se acumulan
-
-:: content ::
-
-<AgPassK />
-
-<!--
-1) Con p = 70 %, pass@3 ≈ 97 % pero pass^3 ≈ 34 %: depende de qué necesitas. 2) Panel derecho: con 95 % por paso y 20 pasos, el éxito cae a ~36 %. Por eso se evalúan los pasos intermedios y se prefieren tareas cortas.
--->
 
 ---
 layout: two-cols-title
@@ -4129,50 +3453,6 @@ puede ser engañado para filtrar tus datos. Si es posible, **quita al menos una*
 <!--
 Simon Willison llama a esta combinación «la trifecta letal» (2025). No existe hoy una defensa perfecta contra la inyección de prompts: la seguridad viene de limitar lo que el agente puede hacer.
 -->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# OWASP Top 10 para aplicaciones con LLM (2025)
-
-:: content ::
-
-La lista de referencia de la comunidad de seguridad (OWASP GenAI Security Project):
-
-<div class="grid grid-cols-2 gap-x-10 text-sm mt-2">
-<div>
-
-| | Riesgo |
-|---|---|
-| LLM01 | **Inyección de prompts** |
-| LLM02 | Divulgación de información sensible |
-| LLM03 | Cadena de suministro |
-| LLM04 | Envenenamiento de datos y del modelo |
-| LLM05 | Manejo inseguro de la salida |
-
-</div>
-<div>
-
-| | Riesgo |
-|---|---|
-| LLM06 | **Agencia excesiva** |
-| LLM07 | Filtración del prompt del sistema |
-| LLM08 | Debilidades en vectores y embeddings |
-| LLM09 | Desinformación |
-| LLM10 | Consumo sin límites |
-
-</div>
-</div>
-
-<div v-click class="mt-4">
-
-Para agentes existe además el **OWASP Top 10 para aplicaciones agénticas** (diciembre de 2025), con riesgos como **ASI01 secuestro del objetivo**, **ASI02 mal uso de herramientas**, **ASI03 abuso de identidad y privilegios** y **ASI10 agentes fuera de control**.
-
-</div>
 
 ---
 layout: two-cols-title
@@ -4270,23 +3550,6 @@ color: white
 
 <!--
 1) Sin defensas: fuga. 2) Solo «marcar como no confiable» y ejecutar varias veces: a veces falla. 3) Mínimo privilegio: la acción se bloquea aunque el modelo sea engañado. 4) El límite de pasos no ayuda contra este ataque: cada defensa cubre un riesgo distinto.
--->
-
----
-layout: top-title
-color: white
----
-
-:: title ::
-
-# Pruébalo: ¿qué tan riesgoso es tu agente?
-
-:: content ::
-
-<AgRisk />
-
-<!--
-1) Por defecto: datos privados + contenido externo, riesgo medio. 2) Marcar «se comunica hacia afuera»: se activa la combinación peligrosa y el riesgo pasa a crítico. 3) Pedir a los alumnos que diseñen un agente útil para la escuela con el menor riesgo posible y que justifiquen qué capacidades quitaron.
 -->
 
 ---
@@ -4507,6 +3770,356 @@ color: white
 
 <!--
 Preguntar: ¿qué pasaría en su propio dominio si cambiamos el flujo en vez del modelo?
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Cómo funciona la tarea S2M
+
+:: content ::
+
+<div class="flex flex-wrap items-center gap-2 mt-4 text-sm">
+<div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white" style="width:200px">
+
+**Entrada:** contexto del estudio, firma molecular (genes con cambios) e instrucción.
+
+</div>
+<div v-click class="text-2xl">→</div>
+<div v-click class="p-3 rounded-lg border-2 border-sky-400 bg-sky-50" style="width:170px">
+
+**Agente:** usa herramientas y razona en varios pasos.
+
+</div>
+<div v-click class="text-2xl">→</div>
+<div v-click class="p-3 rounded-lg border-2 border-slate-200 bg-white" style="width:200px">
+
+**Informe:** explica qué mecanismos producen el cambio observado.
+
+</div>
+<div v-click class="text-2xl">→</div>
+<div v-click class="p-3 rounded-lg border-2 border-orange-500 bg-orange-50" style="width:200px">
+
+**Comparación:** con el informe del experto del mismo estudio.
+
+</div>
+</div>
+
+<!--
+Recorrer el diagrama de izquierda a derecha. Preguntar al grupo qué parte les parece más difícil de automatizar.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Tres sistemas, tres diseños
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Baseline (solo prompt):** el LLM recibe la tarea sin herramientas ni flujo de trabajo. Cobertura de 21 % a 22 %.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-sky-400 bg-white">
+
+**Biomni:** agente general biomédico. Agrega vías e interacciones regulatorias, así sube la cobertura a 25 % a 33 %, pero a menudo baja el soporte.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-emerald-500 bg-white">
+
+**Discovera:** agente especializado en la tarea. Es el de mejor alineación: cobertura de 30 % a 39 % con soporte comparable.
+
+</div>
+</div>
+
+<!--
+Mensaje clave: cambiar el diseño del agente mueve el resultado más que cambiar el modelo base.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: un agente con flujo fijo
+
+:: content ::
+
+<div class="grid grid-cols-3 gap-3 mt-2 text-sm">
+<div v-click class="p-3 rounded-lg border-2 border-sky-400 bg-white">
+
+**1. Módulo de razonamiento (LLM)**
+
+Orquesta. Decide en qué orden llamar herramientas, pero no calcula nada.
+
+</div>
+<div v-click class="p-3 rounded-lg border-2 border-emerald-500 bg-white">
+
+**2. Servidor de herramientas (MCP)**
+
+Ejecuta DESeq2, GSEA, ORA, INDRA, PubMed y GeneCards con entradas y salidas tipadas.
+
+</div>
+<div v-click class="p-3 rounded-lg border-2 border-amber-500 bg-white">
+
+**3. Almacén de artefactos**
+
+Guarda cada entrada, cada llamada y cada resultado. Así el análisis se puede auditar y repetir.
+
+</div>
+</div>
+
+<!--
+Notas para el instructor: el LLM es solo la capa de control. Todo el cálculo pesado sale del modelo.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: de la pregunta al informe
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 1, con conteos crudos:** pipeline completo. Lectura, DESeq2, GSEA, consulta a INDRA y ORA.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 2, con vías ya calculadas:** filtra, luego GSEA y ORA por separado, y consulta RummaGENE.
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Tarea 3, con genes ya diferenciales:** salta el análisis estadístico. Consulta MyGene.info, RummaGENE y PubMed para priorizar blancos.
+
+</div>
+</div>
+
+<!--
+Mensaje clave: el agente no sigue un guion fijo para todas las tareas; elige qué etapas necesita según la entrada.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Discovera: evidencia y trazabilidad
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-4 mt-2 text-sm">
+<div>
+
+**Reglas de uso de la evidencia**
+
+<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
+Toda cifra, mecanismo o cita sale de una herramienta.
+</div>
+<div v-click class="mt-2 p-3 rounded-lg bg-slate-50">
+Antes de responder, el agente revisa sus propias cifras.
+</div>
+
+</div>
+<div>
+
+**Límites que reportan los autores**
+
+<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
+La calidad del mecanismo depende de los resultados de enriquecimiento previos.
+</div>
+<div v-click class="mt-2 p-3 rounded-lg bg-rose-50">
+No elimina alucinaciones ni valida causalidad. Sus hipótesis requieren experimentos.
+</div>
+
+</div>
+</div>
+
+<!--
+Mensaje clave: la trazabilidad no garantiza que la conclusión sea correcta, solo que se puede revisar.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# ICARE-S2M: cómo se evalúa un informe
+
+:: content ::
+
+<div class="flex flex-col gap-2 mt-2 text-sm">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**1. Puntos clave:** cada informe (el del experto y el del agente) se reduce a sus afirmaciones causales y funcionales.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**2. Preguntas:** de cada informe se generan preguntas de opción múltiple. Del experto salen las de **cobertura**; del agente, las de **soporte**.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**3. Respuestas:** otro agente responde esas preguntas usando solo el informe correspondiente.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**4. Acuerdo:** se cuenta cuántas respuestas coinciden. Cobertura: lo del experto que el agente recupera. Soporte: lo del agente que el experto respalda.
+
+</div>
+</div>
+
+<!--
+Enfatizar que la comparación es de conclusiones, no de palabras.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# Ejemplo: el cisplatino de principio a fin
+
+:: content ::
+
+<div class="grid grid-cols-2 gap-3 mt-2 text-sm">
+<div v-click class="p-3 rounded-lg border-2 border-sky-400 bg-white">
+
+**Informe del agente**
+
+- Respuesta de daño al ADN, p53 y apoptosis.
+- Suprime replicación y reparación del ADN.
+- Activa estrés del retículo (ER stress).
+
+</div>
+<div v-click class="p-3 rounded-lg border-2 border-emerald-500 bg-white">
+
+**Informe del experto**
+
+- Respuesta de daño al ADN, p53 y apoptosis.
+- Interacciones con syndecan y matriz extracelular.
+- FGF2 y SDC1 con EMT e invasividad.
+
+</div>
+</div>
+
+<div v-click class="mt-4 p-3 rounded-lg bg-orange-50 border-l-4 border-orange-500 text-sm">
+
+**Mismo tema general, mecanismos distintos.** BioBERT da **0.92**; ICARE-S2M da **0.28**.
+
+</div>
+
+<!--
+Las cuatro coincidencias son el daño al ADN, p53, el arresto del ciclo celular y la apoptosis. Lo demás es distinto.
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# ¿Por qué no basta una métrica de texto?
+
+:: content ::
+
+<div class="flex flex-col gap-3 mt-2 text-sm">
+<div v-click class="p-3 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Ejemplo ilustrativo** (construido para la clase): dos frases casi idénticas.
+
+*«El cisplatino induce apoptosis mediante la vía p53.»*
+*«El cisplatino induce apoptosis mediante la vía syndecan.»*
+
+</div>
+<div v-click class="p-3 pl-4 rounded-lg bg-orange-50 border-l-4 border-orange-500">
+
+Una métrica de palabras da casi lo mismo a las dos, porque comparten casi todo el texto. Pero solo una coincide con el mecanismo del experto.
+
+</div>
+</div>
+
+<!--
+Pregunta para el grupo: si una métrica da 0.92 a dos explicaciones con mecanismos distintos, ¿qué le está midiendo?
+-->
+
+---
+layout: top-title
+color: white
+
+---
+
+:: title ::
+
+# ¿Por qué el problema es difícil?
+
+:: content ::
+
+<div class="flex flex-col gap-2 mt-2 text-sm">
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Evidencia heterogénea:** los datos vienen de varias modalidades (RNA-seq, proteómica, Ribo-seq) y de la literatura, y hay que integrarlos.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Razonamiento causal de varios pasos:** en las tareas 3.2 y 3.3 la cobertura quedó cerca de cero en todas las configuraciones.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Conocimiento implícito:** a veces el experto usa contexto que no está escrito en el estudio.
+
+</div>
+<div v-click class="p-2 pl-4 rounded-lg border-2 border-slate-200 bg-white">
+
+**Dos formas de fallar:** omitir mecanismos reales o introducir alternativas plausibles pero no respaldadas. La omisión fue el fallo dominante.
+
+</div>
+</div>
+
+<!--
+Conectar con la idea de que el problema es de razonamiento, no solo de lenguaje.
 -->
 
 ---
